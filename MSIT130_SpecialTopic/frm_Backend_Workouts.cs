@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MSIT130_SpecialTopic
@@ -226,6 +222,7 @@ namespace MSIT130_SpecialTopic
         }
         #endregion
 
+        #region Form Load Event
         private void frm_Backend_Workouts_Load(object sender, EventArgs e)
         {
 
@@ -245,6 +242,7 @@ namespace MSIT130_SpecialTopic
 
             SetDataBinds();
         }
+        #endregion
 
         #region WorkoutCategories
         private void btnAddWC_Click(object sender, EventArgs e)
