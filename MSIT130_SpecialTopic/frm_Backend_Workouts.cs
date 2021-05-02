@@ -183,6 +183,7 @@ namespace MSIT130_SpecialTopic
             for (int i = 0; i < collist.Count; i++)
             {
                 dgv.Columns[collist[i]].DisplayIndex = i;
+                dgv.Columns[collist[i]].ReadOnly = true;
             }
 
             
@@ -444,8 +445,6 @@ namespace MSIT130_SpecialTopic
             }
         }
 
-        
-
         private void dgvW_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             DataGridView dgv = (DataGridView)sender;
@@ -555,7 +554,6 @@ namespace MSIT130_SpecialTopic
     #region partial class test
     public partial class Workout
     {
-        //[Column(Order = 13)]
         public string ActivityLevelDescription
         {
             get
@@ -564,7 +562,6 @@ namespace MSIT130_SpecialTopic
             }
         }
 
-        //[Column(Order = 4)]
         public string WorkoutCategoryName
         {
             get
