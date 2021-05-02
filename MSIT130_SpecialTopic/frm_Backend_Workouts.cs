@@ -325,7 +325,7 @@ namespace MSIT130_SpecialTopic
             }
 
             if (e.ColumnIndex == dgv.Columns["Delete"].Index
-                && MessageBox.Show("是否刪除此列？", "刪除", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                && MessageBox.Show($"是否刪除此列[{dgv.Rows[e.RowIndex].Cells["Name"].Value}]？", "刪除", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
@@ -455,7 +455,7 @@ namespace MSIT130_SpecialTopic
             }
 
             if (e.ColumnIndex == dgv.Columns["Delete"].Index
-                && MessageBox.Show("是否刪除此列？", "刪除", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                && MessageBox.Show($"是否刪除此列[{dgv.Rows[e.RowIndex].Cells["Name"].Value}]？", "刪除", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
