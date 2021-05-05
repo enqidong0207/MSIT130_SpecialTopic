@@ -12,21 +12,18 @@ namespace MSIT130_SpecialTopic
     using System;
     using System.Collections.Generic;
     
-    public partial class ActivityLevel
+    public partial class MealTagCategory
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ActivityLevel()
+        public MealTagCategory()
         {
-            this.Members = new HashSet<Member>();
-            this.Workouts = new HashSet<Workout>();
+            this.MealTags = new HashSet<MealTag>();
         }
     
         public int ID { get; set; }
-        public string Description { get; set; }
+        public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Member> Members { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Workout> Workouts { get; set; }
+        public virtual ICollection<MealTag> MealTags { get; set; }
     }
 }

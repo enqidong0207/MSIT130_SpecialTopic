@@ -7,62 +7,32 @@ using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Infrastructure;
 using System.Drawing;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MSIT130_SpecialTopic
 {
-    public partial class frm_Backend_Workouts : Form
+    public partial class FrmWorkouts : Form
     {
         HealthManagementEntities dbContext = new HealthManagementEntities();
-        public frm_Backend_Workouts()
+        public FrmWorkouts()
         {
             InitializeComponent();
+            //dbContext.Entry(dbContext.Workouts.FirstOrDefault()).Reference(r => r.WorkoutCategory).Load();
         }
 
         #region Shared Method
-        private void LoadWCToCmbBox(BindingSource bs, params ComboBox[] cmbs)
+       
+        private void LoadCmbBox(BindingSource bs, string DisplayMember, string ValueMember, params ComboBox[] cmbs)
         {
             if (bs.Count > 0)
             {
                 for (int i = 0; i < cmbs.Length; i++)
                 {
-                    cmbs[i].DataSource = this.bsWC;
-                    cmbs[i].DisplayMember = "Name";
-                    cmbs[i].ValueMember = "ID";
-                } 
-            }
-            else
-            {
-                for (int i = 0; i < cmbs.Length; i++)
-                {
-                    cmbs[i].DataSource = null;
-                }
-            }
-
-        }
-
-        private void LoadALToCmbBox(params ComboBox[] cmbs)
-        {
-
-            for (int i = 0; i < cmbs.Length; i++)
-            {
-                cmbs[i].DataSource = dbContext.ActivityLevels.OrderBy(al => al.ID).ToList();
-                cmbs[i].DisplayMember = "Description";
-                cmbs[i].ValueMember = "ID";
-
-            }
-
-        }
-
-        private void LoadWToCmbBox(BindingSource bs, params ComboBox[] cmbs)
-        {
-            if (bs.Count > 0)
-            {
-                for (int i = 0; i < cmbs.Length; i++)
-                {
-                    cmbs[i].DataSource = this.bsW;
-                    cmbs[i].DisplayMember = "Name";
-                    cmbs[i].ValueMember = "ID";
+                    cmbs[i].DataSource = bs;
+                    cmbs[i].DisplayMember = DisplayMember;
+                    cmbs[i].ValueMember = ValueMember;
 
                 }
             }
@@ -73,7 +43,6 @@ namespace MSIT130_SpecialTopic
                     cmbs[i].DataSource = null;
                 }
             }
-
         }
 
         private bool TestTxtBoxIsEmpty(List<Label> lbls, params KeyValuePair<Label, TextBox>[] pairs)
@@ -91,10 +60,6 @@ namespace MSIT130_SpecialTopic
                     lbls[i].Text += $"請輸入{pairs[i].Key.Text}";
                     b = false;
                 }
-                else
-                {
-                    lbls[i].Text = "";
-                }
             }
 
             return b;
@@ -106,6 +71,7 @@ namespace MSIT130_SpecialTopic
 
             for (int i = 0; i < pairs.Length; i++)
             {
+                
                 if (!double.TryParse(pairs[i].Value.Text, out double f))
                 {
                     if (lbls[i].Text != "")
@@ -114,10 +80,6 @@ namespace MSIT130_SpecialTopic
                     }
                     lbls[i].Text += $"請在{pairs[i].Key.Text}欄位輸入數字";
                     b = false;
-                }
-                else
-                {
-                    lbls[i].Text = "";
                 }
             }
 
@@ -131,7 +93,7 @@ namespace MSIT130_SpecialTopic
                 lbls[i].Text = "";
             }
         }
-        
+
         private void SetDataGridView<T>(DataGridView dgv, params string[] colsToHide)
         {
             List<string> navCols = new List<string>();
@@ -186,7 +148,7 @@ namespace MSIT130_SpecialTopic
                 dgv.Columns[collist[i]].ReadOnly = true;
             }
 
-            
+
         }
 
         private void RejectChanges()
@@ -209,7 +171,7 @@ namespace MSIT130_SpecialTopic
 
         private void SetDataBinds()
         {
-            this.cmbEditWC_Name.DataBindings.Add("SelectedValue", this.bsWC, "ID");
+            this.txtEditWC_Name_Old.DataBindings.Add("Text", this.bsWC, "Name");
 
             this.cmbAddW_WC.DataBindings.Add("SelectedValue", this.bsW, "WorkoutCategoryID");
             this.cmbEditW_WC.DataBindings.Add("SelectedValue", this.bsW, "WorkoutCategoryID");
@@ -217,31 +179,64 @@ namespace MSIT130_SpecialTopic
             this.cmbAddW_AL.DataBindings.Add("SelectedValue", this.bsW, "ActivityLevelID");
             this.cmbEditW_AL.DataBindings.Add("SelectedValue", this.bsW, "ActivityLevelID");
 
-            this.cmbEditW_Name.DataBindings.Add("SelectedValue", this.bsW, "ID");
+            this.txtEditW_Name_Old.DataBindings.Add("Text", this.bsW, "Name");
 
             this.txtEditW_Cal.DataBindings.Add("Text", this.bsW, "Calories");
+        }
+
+        private void SetSearchCmbBox()
+        {
+            var q1 = this.dbContext.WorkoutCategories.OrderBy(r => r.ID)
+                .Select(r => new { Text = r.Name, Value = r.ID });
+
+            var list1 = q1.ToList();
+            list1.Insert(0, new { Text = "全部類型", Value = -1 });
+            this.cmbSearchW_WC.DisplayMember = "Text";
+            this.cmbSearchW_WC.ValueMember = "Value";
+            this.cmbSearchW_WC.DataSource = list1;
+            this.cmbSearchW_WC.SelectedValue = -1;
+
+            var q2 = this.dbContext.ActivityLevels.OrderBy(r => r.ID)
+                .Select(r => new { Text = r.Description, Value = r.ID });
+
+            var list2 = q2.ToList();
+            list2.Insert(0, new { Text = "全部強度", Value = -1 });
+            this.cmbSearchW_AL.DisplayMember = "Text";
+            this.cmbSearchW_AL.ValueMember = "Value";
+            this.cmbSearchW_AL.DataSource = list2;
+            this.cmbSearchW_AL.SelectedValue = -1;
+
         }
         #endregion
 
         #region Form Load Event
-        private void frm_Backend_Workouts_Load(object sender, EventArgs e)
+        private void FrmWorkouts_Load(object sender, EventArgs e)
         {
 
             this.dgvWC.DataSource = this.bsWC;
             this.bsWC.DataSource = dbContext.WorkoutCategories.OrderBy(r => r.ID).ToList();
-            
+
             this.dgvW.DataSource = this.bsW;
             this.bsW.DataSource = dbContext.Workouts.OrderBy(r => r.ID).ToList();
+
+            this.bsAL.DataSource = dbContext.ActivityLevels.OrderBy(r => r.ID).ToList();
 
             SetDataGridView<WorkoutCategory>(this.dgvWC);
             SetDataGridView<Workout>(this.dgvW, "ActivityLevelID", "WorkoutCategoryID");
 
-            LoadWCToCmbBox(this.bsWC, this.cmbEditWC_Name);
-            LoadWCToCmbBox(this.bsWC, this.cmbAddW_WC, this.cmbEditW_WC);
-            LoadWToCmbBox(this.bsW, this.cmbEditW_Name);
-            LoadALToCmbBox(this.cmbAddW_AL, this.cmbEditW_AL);
+            LoadCmbBox(this.bsWC, "Name", "ID", this.cmbAddW_WC, this.cmbEditW_WC);
+            LoadCmbBox(this.bsAL, "Description", "ID", this.cmbAddW_AL, this.cmbEditW_AL);
+
+            SetSearchCmbBox();
 
             SetDataBinds();
+
+            this.lblAddWC_Test.Text = "";
+            this.lblEditWC_Test.Text = "";
+            this.lblAddW_Name_Test.Text = "";
+            this.lblAddW_Cal_Test.Text = "";
+            this.lblEditW_Name_Test.Text = "";
+            this.lblSearchW_Cal_Test.Text = "";
         }
         #endregion
 
@@ -253,7 +248,7 @@ namespace MSIT130_SpecialTopic
 
             ClearLabels(lbls.ToArray());
 
-            bool test = TestTxtBoxIsEmpty(lbls, 
+            bool test = TestTxtBoxIsEmpty(lbls,
                 new KeyValuePair<Label, TextBox>(this.lblAddWC_Name, this.txtAddWC_Name)); ;
 
             if (!test)
@@ -299,7 +294,7 @@ namespace MSIT130_SpecialTopic
             try
             {
                 WorkoutCategory wc = dbContext.WorkoutCategories
-                    .Where(r => r.ID == (int)this.cmbEditWC_Name.SelectedValue).FirstOrDefault();
+                    .Where(r => r.ID == ((WorkoutCategory)this.bsWC.Current).ID).FirstOrDefault();
                 wc.Name = this.txtEditWC_Name.Text;
                 dbContext.SaveChanges();
 
@@ -344,6 +339,22 @@ namespace MSIT130_SpecialTopic
                     RejectChanges();
                 }
             }
+        }
+
+        private void btnSearchWC_Click(object sender, EventArgs e)
+        {
+            if (this.txtSearchWC_Name.Text == "")
+            {
+                this.bsWC.DataSource = this.dbContext.WorkoutCategories
+                    .OrderBy(r => r.ID).ToList();
+            }
+            else
+            {
+                this.bsWC.DataSource = this.dbContext.WorkoutCategories
+                    .Where(r => r.Name.Contains(this.txtSearchWC_Name.Text))
+                    .OrderBy(r => r.ID).ToList();
+            }
+
         }
         #endregion
 
@@ -401,21 +412,13 @@ namespace MSIT130_SpecialTopic
         {
             List<Label> lbls = new List<Label>();
             lbls.Add(this.lblEditW_Name_Test);
-            lbls.Add(this.lblEditW_Cal_Test);
 
             ClearLabels(lbls.ToArray());
 
             bool test = TestTxtBoxIsEmpty(lbls,
-                new KeyValuePair<Label, TextBox>(this.lblEditW_Name, this.txtEditW_Name),
-                new KeyValuePair<Label, TextBox>(this.lblEditW_Cal, this.txtEditW_Cal)
+                new KeyValuePair<Label, TextBox>(this.lblEditW_Name, this.txtEditW_Name)
             );
 
-            lbls.Clear();
-            lbls.Add(this.lblEditW_Cal_Test);
-
-            test &= TestTxtBoxIsDouble(lbls,
-                new KeyValuePair<Label, TextBox>(this.lblEditW_Cal, this.txtEditW_Cal)
-            );
 
             if (!test)
             {
@@ -424,7 +427,7 @@ namespace MSIT130_SpecialTopic
 
             try
             {
-                Workout w = dbContext.Workouts.Where(r => r.ID == (int)this.cmbEditW_Name.SelectedValue).FirstOrDefault();
+                Workout w = dbContext.Workouts.Where(r => r.ID == ((Workout)this.bsW.Current).ID).FirstOrDefault();
                 w.Name = this.txtEditW_Name.Text;
                 w.Calories = double.Parse(this.txtEditW_Cal.Text);
                 w.WorkoutCategoryID = (int)this.cmbEditW_WC.SelectedValue;
@@ -479,6 +482,107 @@ namespace MSIT130_SpecialTopic
                 }
             }
         }
+
+        private void btnSearchW_Click(object sender, EventArgs e)
+        {
+            bool test1 = true, test2 = true;
+            if (this.txtSearchW_Cal1.Text != "")
+            {
+                List<Label> lbls = new List<Label>();
+
+                lbls.Add(this.lblSearchW_Cal_Test);
+                lbls.Add(this.lblSearchW_Cal_Test);
+
+                ClearLabels(lbls.ToArray());
+
+                test1 = TestTxtBoxIsDouble(lbls,
+                    new KeyValuePair<Label, TextBox>(this.lblSearchW_Cal, this.txtSearchW_Cal1)
+                );
+            }
+
+            if (this.txtSearchW_Cal2.Text != "")
+            {
+                List<Label> lbls = new List<Label>();
+
+                lbls.Add(this.lblSearchW_Cal_Test);
+                lbls.Add(this.lblSearchW_Cal_Test);
+
+                ClearLabels(lbls.ToArray());
+
+                test2 = TestTxtBoxIsDouble(lbls,
+                    new KeyValuePair<Label, TextBox>(this.lblSearchW_Cal, this.txtSearchW_Cal2)
+                );
+            }
+
+            if (!test1 || !test2)
+            {
+                return;
+            }
+
+            this.bsW.DataSource = this.dbContext.Workouts.AsEnumerable().Where(r =>
+            {
+                bool flag = true;
+                String name = "";
+                double cal1 = 0d;
+                double cal2 = 0d;
+                int wcID = 0;
+                int alID = 0;
+
+                if (this.txtSearchW_Name.Text == "")
+                {
+                    name = r.Name;
+                }
+                else
+                {
+                    name = this.txtSearchW_Name.Text;
+                }
+
+                if (this.txtSearchW_Cal1.Text == "")
+                {
+                    cal1 = r.Calories;
+                }
+                else
+                {
+                    cal1 = double.Parse(this.txtSearchW_Cal1.Text);
+                }
+
+                if (this.txtSearchW_Cal2.Text == "")
+                {
+                    cal2 = r.Calories;
+                }
+                else
+                {
+                    cal2 = double.Parse(this.txtSearchW_Cal2.Text);
+                }
+
+                if ((int)this.cmbSearchW_WC.SelectedValue == -1)
+                {
+                    wcID = r.WorkoutCategoryID;
+                }
+                else
+                {
+                    wcID = (int)this.cmbSearchW_WC.SelectedValue;
+                }
+
+                if ((int)this.cmbSearchW_AL.SelectedValue == -1)
+                {
+                    alID = r.ActivityLevelID;
+                }
+                else
+                {
+                    alID = (int)this.cmbSearchW_AL.SelectedValue;
+                }
+
+                flag &= r.Name.Contains(name);
+                flag &= r.Calories >= cal1 && r.Calories <= cal2;
+                flag &= r.WorkoutCategoryID == wcID;
+                flag &= r.ActivityLevelID == alID;
+                return flag;
+            }).ToList();
+
+            this.dgvW.Columns["Delete"].DisplayIndex = this.dgvW.Columns.Count - 1;
+        }
+
         #endregion
 
         #region BindingSource
@@ -486,15 +590,15 @@ namespace MSIT130_SpecialTopic
         {
             if (this.bsWC.Count == 0)
             {
-                LoadWCToCmbBox(this.bsWC, this.cmbEditWC_Name);
-                LoadWCToCmbBox(this.bsWC, this.cmbAddW_WC, this.cmbEditW_WC);
+                LoadCmbBox(this.bsWC, "Name", "ID", this.cmbAddW_WC, this.cmbEditW_WC);
             }
-            else if (this.bsWC.Count == 1 && e.ListChangedType == ListChangedType.ItemAdded)
+            else
             {
-                LoadWCToCmbBox(this.bsWC, this.cmbEditWC_Name);
-                LoadWCToCmbBox(this.bsWC, this.cmbAddW_WC, this.cmbEditW_WC);
+                LoadCmbBox(this.bsWC, "Name", "ID", this.cmbAddW_WC, this.cmbEditW_WC);
             }
-            else if (e.ListChangedType == ListChangedType.ItemAdded)
+            
+            
+            if (e.ListChangedType == ListChangedType.ItemAdded)
             {
                 this.bsWC.Position = e.NewIndex;
             }
@@ -502,23 +606,7 @@ namespace MSIT130_SpecialTopic
 
         private void bsW_ListChanged(object sender, ListChangedEventArgs e)
         {
-            if (this.bsW.Count == 0 && e.ListChangedType == ListChangedType.ItemDeleted)
-            {
-                LoadWToCmbBox(this.bsW, this.cmbEditW_Name);
-                this.cmbAddW_WC.SelectedIndex = 0;
-                this.cmbAddW_AL.SelectedIndex = 0;
-                this.cmbEditW_WC.SelectedIndex = 0;
-                this.cmbEditW_AL.SelectedIndex = 0;
-            }
-            else if (this.bsW.Count == 0)
-            {
-                LoadWToCmbBox(this.bsW, this.cmbEditW_Name);
-            }
-            else if (this.bsW.Count == 1 && e.ListChangedType == ListChangedType.ItemAdded)
-            {
-                LoadWToCmbBox(this.bsW, this.cmbEditW_Name);
-            }
-            else if(e.ListChangedType == ListChangedType.ItemAdded)
+            if (e.ListChangedType == ListChangedType.ItemAdded)
             {
                 this.bsW.Position = e.NewIndex;
             }
@@ -540,15 +628,16 @@ namespace MSIT130_SpecialTopic
 
         private void label8_Click(object sender, EventArgs e)
         {
-            this.txtEditWC_Name.Text = this.cmbEditWC_Name.Text;
+            this.txtEditWC_Name.Text = this.txtEditWC_Name_Old.Text;
         }
 
         private void label7_Click(object sender, EventArgs e)
         {
-            this.txtEditW_Name.Text = this.cmbEditW_Name.Text;
+            this.txtEditW_Name.Text = this.txtEditW_Name_Old.Text;
         }
-        #endregion
 
+
+        #endregion
     }
 
     #region partial class test

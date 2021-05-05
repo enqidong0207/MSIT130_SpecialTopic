@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5bf5f7efc2da4ce6abde0554b3226eaa" Name="Diagram1">
+        <EntityTypeShape EntityType="HealthManagementModel.ActivityLevel" Width="1.5" PointX="0.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.DietDetail" Width="1.5" PointX="10.5" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.DietLog" Width="1.5" PointX="8.25" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.MealOption" Width="1.5" PointX="8.25" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.MealTagCategory" Width="1.5" PointX="8.25" PointY="1.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.MealTag" Width="1.5" PointX="10.5" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.Member" Width="1.5" PointX="3" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.Preference" Width="1.5" PointX="5.25" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.Status" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.sysdiagram" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.TimesOfDay" Width="1.5" PointX="6" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.WeightLog" Width="1.5" PointX="5.25" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.WorkoutCategory" Width="1.5" PointX="3" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.WorkoutLog" Width="1.5" PointX="11.25" PointY="7.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="HealthManagementModel.Workout" Width="1.5" PointX="6" PointY="7.25" IsExpanded="true" />
+        <AssociationConnector Association="HealthManagementModel.FK_Members_ActivityLevels" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_Workouts_ActivityLevels" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_DietDetails_DietLog" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_DietDetails_MealOptions" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_DietLog_Members" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_DietLog_TimesOfDay" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_MealTags_MealOptions" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_MealTags_MealTagCategories" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_Members_Status" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_Preference_Members" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_WeightLog_Members" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_WorkoutLog_Members" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_Preference_WorkoutCategories" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_Workouts_WorkoutCategories" ManuallyRouted="false" />
+        <AssociationConnector Association="HealthManagementModel.FK_WorkoutLog_Workouts" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

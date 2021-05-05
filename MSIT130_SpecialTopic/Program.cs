@@ -16,7 +16,7 @@ namespace MSIT130_SpecialTopic
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frm_Backend_Workouts());
+            Application.Run(new Form1());
         }
     }
 }
